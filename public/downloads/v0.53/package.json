@@ -1,0 +1,35 @@
+{
+  "name": "PowerAuto.ai",
+  "version": "0.53",
+  "description": "開發工作流端到端閉環管理平台",
+  "main": "powerauto.py",
+  "author": "PowerAuto.ai Team",
+  "license": "MIT",
+  "homepage": "https://powerauto.ai",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/powerauto/powerauto.ai"
+  },
+  "keywords": [
+    "AI",
+    "開發工具",
+    "自動化",
+    "端到端",
+    "隱私保護"
+  ],
+  "requirements": [
+    "python>=3.8"
+  ],
+  "features": [
+    "隱私保護 - 本地AI處理",
+    "智能決策 - 精準匹配AI模型", 
+    "協同作業 - 多智能體協作",
+    "持續學習 - 個性化體驗"
+  ],
+  "platforms": [
+    "Windows",
+    "macOS", 
+    "Linux"
+  ]
+}
+

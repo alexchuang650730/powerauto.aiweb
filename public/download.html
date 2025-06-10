@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PowerAuto.ai v0.53 下載</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .version {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .download-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        .download-card {
+            border: 2px solid #e1e5e9;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .download-card:hover {
+            border-color: #667eea;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+        }
+        .platform-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+        .platform-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 15px;
+        }
+        .download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .file-info {
+            color: #666;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .features {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 40px 0;
+        }
+        .features h3 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .feature-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            color: #555;
+        }
+        .feature-item::before {
+            content: "✅";
+            margin-right: 10px;
+        }
+        @media (max-width: 768px) {
+            .download-section,
+            .feature-list {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PowerAuto.ai</h1>
+        <p class="version">版本 v0.53 - 開發工作流端到端閉環管理平台</p>
+        
+        <div class="download-section">
+            <div class="download-card">
+                <div class="platform-icon">🍎</div>
+                <div class="platform-name">macOS</div>
+                <p>適用於 macOS 10.15 或更高版本</p>
+                <a href="PowerAuto.ai-v0.53-macOS.zip" class="download-btn">
+                    下載 Mac 版本
+                </a>
+                <div class="file-info">
+                    文件大小：~2MB<br>
+                    格式：ZIP 壓縮包
+                </div>
+            </div>
+            
+            <div class="download-card">
+                <div class="platform-icon">🪟</div>
+                <div class="platform-name">Windows</div>
+                <p>適用於 Windows 10 或更高版本</p>
+                <a href="PowerAuto.ai-v0.53-Windows.zip" class="download-btn">
+                    下載 Windows 版本
+                </a>
+                <div class="file-info">
+                    文件大小：~2MB<br>
+                    格式：ZIP 壓縮包
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <h3>🚀 核心功能特性</h3>
+            <div class="feature-list">
+                <div class="feature-item">隱私保護 - 本地AI處理</div>
+                <div class="feature-item">智能決策 - 精準匹配AI模型</div>
+                <div class="feature-item">協同作業 - 多智能體協作</div>
+                <div class="feature-item">持續學習 - 個性化體驗</div>
+                <div class="feature-item">端到端閉環 - 完整開發流程</div>
+                <div class="feature-item">跨平台支持 - Windows/Mac/Linux</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 40px; color: #666;">
+            <p>需要幫助？聯繫我們：</p>
+            <p>📧 support@powerauto.ai | 📞 +86 13725761379</p>
+            <p>🌐 <a href="https://powerauto.ai" style="color: #667eea;">官方網站</a></p>
+        </div>
+    </div>
+</body>
+</html>
