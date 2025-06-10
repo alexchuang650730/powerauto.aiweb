@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import CodeEditor from './components/CodeEditor'
 import ProjectTemplates from './components/ProjectTemplates'
+import DownloadPage from './components/DownloadPage'
 import './App.css'
 
 function App() {
@@ -141,8 +142,14 @@ function App() {
               🚀 立即體驗
             </button>
             <button 
-              onClick={() => setCurrentPage('templates')}
+              onClick={() => setCurrentPage('download')}
               className="bg-green-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-700 transition-colors"
+            >
+              📥 立即下載
+            </button>
+            <button 
+              onClick={() => setCurrentPage('templates')}
+              className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors"
             >
               📦 項目模板
             </button>
@@ -170,6 +177,13 @@ function App() {
       <div className="max-w-7xl mx-auto px-4 py-16">
         <ProjectTemplates />
       </div>
+    </div>
+  )
+
+  // 下載頁面
+  const DownloadPageComponent = () => (
+    <div className="min-h-screen bg-gray-50 pt-20">
+      <DownloadPage />
     </div>
   )
 
@@ -204,6 +218,14 @@ function App() {
                 }`}
               >
                 AI演示
+              </button>
+              <button 
+                onClick={() => handleNavigation('download')}
+                className={`font-medium transition-colors ${
+                  currentPage === 'download' ? 'text-blue-600' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                下載
               </button>
               <button 
                 onClick={() => handleNavigation('templates')}
