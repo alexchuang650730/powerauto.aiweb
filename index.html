@@ -693,8 +693,10 @@
     </style>
 </head>
 <body>
-    <!-- 导航栏 -->
-    <nav class="navbar">
+    <!-- SmartUI配置元素 - 可以通过修改data-url属性来配置跳转地址 -->
+    <div id="smartui-config" data-url="https://manus.im" style="display: none;"></div>
+
+    <!-- 导航栏 -->    <nav class="navbar">
         <div class="nav-container">
             <div class="logo">
                 <i class="fas fa-robot"></i>
@@ -1261,35 +1263,28 @@
 
         // 页面导航功能
 
-        // 一键部署功能 - 直接跳转到SmartUI MCP服务
+        // 一键部署功能 - 显示部署过程
         function startOneClickDeploy() {
-            console.log('Starting one-click deployment - redirecting to SmartUI MCP...');
+            console.log('Starting one-click deployment...');
             
-            // SmartUI MCP服务地址
-            const smartUIMCPUrl = 'https://smartui-mcp.manus.space/';
-            
-            try {
-                // 尝试在新标签页打开SmartUI MCP服务
-                const newWindow = window.open(smartUIMCPUrl, '_blank');
-                
-                if (newWindow) {
-                    console.log('Successfully opened SmartUI MCP service');
-                    // 显示成功提示
-                    showNotification('正在打開SmartUI MCP服務...', 'success');
-                } else {
-                    console.warn('Popup blocked - showing fallback options');
-                    // 弹窗被阻止时的处理
-                    showNotification('請允許彈出窗口以打開SmartUI MCP服務', 'warning');
-                    
-                    // 询问用户是否在当前页面打开
-                    if (confirm('彈出窗口被阻止。是否在當前頁面打開SmartUI MCP服務？')) {
-                        window.location.href = smartUIMCPUrl;
-                    }
-                }
-            } catch (error) {
-                console.error('Error opening SmartUI MCP service:', error);
-                showNotification('打開SmartUI MCP服務時出錯: ' + error.message, 'error');
+            // 显示部署模态框
+            const modal = document.getElementById('deployModal');
+            if (modal) {
+                modal.style.display = 'block';
+                console.log('Modal displayed');
+            } else {
+                console.error('Deploy modal not found');
+                return;
             }
+            
+            // 重置所有步骤状态
+            resetDeploySteps();
+            
+            // 延迟一点时间确保DOM更新完成，然后开始部署流程
+            setTimeout(() => {
+                console.log('Starting deployment simulation...');
+                simulateDeployment();
+            }, 100);
         }
 
         function resetDeploySteps() {
@@ -1386,21 +1381,51 @@
 
         function openWebConsole() {
             console.log('openWebConsole function called');
-            // 跳转到指定的Manus服务
-            const smartUIUrl = 'https://lnakbfts.manus.space/';
-            console.log('Opening URL:', smartUIUrl);
+            
+            // 获取配置的跳转地址，支持多种配置方式
+            let targetUrl = getSmartUIUrl();
+            
+            console.log('Opening URL:', targetUrl);
             try {
-                const newWindow = window.open(smartUIUrl, '_blank');
+                const newWindow = window.open(targetUrl, '_blank');
                 if (newWindow) {
                     console.log('Window opened successfully');
+                    showNotification('正在打開SmartUI工作台...', 'success');
                 } else {
                     console.error('Failed to open window - popup blocked?');
-                    alert('请允许弹出窗口以打开SmartUI工作台');
+                    showNotification('請允許彈出窗口以打開SmartUI工作台', 'warning');
+                    
+                    // 询问用户是否在当前页面打开
+                    if (confirm('彈出窗口被阻止。是否在當前頁面打開SmartUI工作台？')) {
+                        window.location.href = targetUrl;
+                    }
                 }
             } catch (error) {
                 console.error('Error opening window:', error);
-                alert('打开SmartUI工作台时出错: ' + error.message);
+                showNotification('打開SmartUI工作台時出錯: ' + error.message, 'error');
             }
+        }
+
+        // 获取SmartUI服务地址的配置函数
+        function getSmartUIUrl() {
+            // 优先级1: 页面配置属性
+            const configElement = document.getElementById('smartui-config');
+            if (configElement && configElement.dataset.url) {
+                return configElement.dataset.url;
+            }
+            
+            // 优先级2: 全局配置变量
+            if (window.SMARTUI_CONFIG && window.SMARTUI_CONFIG.url) {
+                return window.SMARTUI_CONFIG.url;
+            }
+            
+            // 优先级3: 环境变量（如果有的话）
+            if (window.SMARTUI_MCP_URL) {
+                return window.SMARTUI_MCP_URL;
+            }
+            
+            // 优先级4: 默认地址（可以是Manus主站或其他可用服务）
+            return 'https://manus.im';
         }
 
         // 点击模态框外部关闭
