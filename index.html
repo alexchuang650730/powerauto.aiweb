@@ -694,7 +694,7 @@
 </head>
 <body>
     <!-- SmartUI配置元素 - 可以通过修改data-url属性来配置跳转地址 -->
-    <div id="smartui-config" data-url="https://manus.im" style="display: none;"></div>
+    <div id="smartui-config" data-url="https://lnakbfts.manus.space" style="display: none;"></div>
 
     <!-- 导航栏 -->    <nav class="navbar">
         <div class="nav-container">
@@ -1186,6 +1186,58 @@
     </footer>
 
     <script>
+        // PowerAuto.ai 配置系统
+        window.PowerAutoConfig = {
+            // SmartUI服务配置
+            smartui: {
+                // 默认跳转地址
+                defaultUrl: 'https://lnakbfts.manus.space',
+                // 备用地址列表
+                fallbackUrls: [
+                    'https://lnakbfts.manus.space',
+                    'https://manus.im'
+                ]
+            },
+            
+            // 部署配置
+            deployment: {
+                // 模拟EC2 IP地址
+                mockEC2IP: '52.74.123.45',
+                // 部署步骤配置
+                steps: [
+                    { id: 'step1', duration: 2000, message: '正在啟動 EC2 控制中心...' },
+                    { id: 'step2', duration: 1500, message: '正在準備端側接收器...' },
+                    { id: 'step3', duration: 2500, message: '正在建立連接...' },
+                    { id: 'step4', duration: 3000, message: '正在部署 PowerAutomation_local...' },
+                    { id: 'step5', duration: 1000, message: '部署完成！' }
+                ]
+            }
+        };
+
+        // 配置管理函数
+        window.PowerAutoConfig.updateSmartUIUrl = function(newUrl) {
+            this.smartui.defaultUrl = newUrl;
+            // 同时更新页面配置元素
+            const configElement = document.getElementById('smartui-config');
+            if (configElement) {
+                configElement.dataset.url = newUrl;
+            }
+            console.log('SmartUI URL updated to:', newUrl);
+        };
+
+        window.PowerAutoConfig.updateEC2IP = function(newIP) {
+            this.deployment.mockEC2IP = newIP;
+            console.log('EC2 IP updated to:', newIP);
+        };
+
+        window.PowerAutoConfig.getConfig = function() {
+            return {
+                smartuiUrl: this.smartui.defaultUrl,
+                ec2IP: this.deployment.mockEC2IP,
+                deploymentSteps: this.deployment.steps.length
+            };
+        };
+
         // 页面切换功能
         function showPage(pageId) {
             // 隐藏所有页面
@@ -1299,13 +1351,16 @@
         }
 
         function simulateDeployment() {
-            const steps = [
-                { id: 'step1', duration: 2000, message: '正在啟動 EC2 控制中心...' },
-                { id: 'step2', duration: 1500, message: '正在準備端側接收器...' },
-                { id: 'step3', duration: 2500, message: '正在建立連接...' },
-                { id: 'step4', duration: 3000, message: '正在部署 PowerAutomation_local...' },
-                { id: 'step5', duration: 1000, message: '部署完成！' }
-            ];
+            // 从配置系统获取部署步骤
+            const steps = window.PowerAutoConfig && window.PowerAutoConfig.deployment && window.PowerAutoConfig.deployment.steps 
+                ? window.PowerAutoConfig.deployment.steps 
+                : [
+                    { id: 'step1', duration: 2000, message: '正在啟動 EC2 控制中心...' },
+                    { id: 'step2', duration: 1500, message: '正在準備端側接收器...' },
+                    { id: 'step3', duration: 2500, message: '正在建立連接...' },
+                    { id: 'step4', duration: 3000, message: '正在部署 PowerAutomation_local...' },
+                    { id: 'step5', duration: 1000, message: '部署完成！' }
+                ];
 
             let currentStep = 0;
             const totalSteps = steps.length;
@@ -1355,8 +1410,10 @@
         }
 
         function showDeploymentResult() {
-            // 模拟获取EC2 IP地址
-            const mockEC2IP = '52.74.123.45'; // 这里应该是实际的EC2 IP
+            // 从配置系统获取EC2 IP地址
+            const mockEC2IP = window.PowerAutoConfig && window.PowerAutoConfig.deployment && window.PowerAutoConfig.deployment.mockEC2IP 
+                ? window.PowerAutoConfig.deployment.mockEC2IP 
+                : '52.74.123.45'; // 备用默认值
             
             // 更新结果中的链接和命令
             document.getElementById('webConsoleLink').href = `http://${mockEC2IP}:8090`;
@@ -1424,8 +1481,13 @@
                 return window.SMARTUI_MCP_URL;
             }
             
-            // 优先级4: 默认地址（可以是Manus主站或其他可用服务）
-            return 'https://manus.im';
+            // 优先级4: PowerAuto配置系统
+            if (window.PowerAutoConfig && window.PowerAutoConfig.smartui && window.PowerAutoConfig.smartui.defaultUrl) {
+                return window.PowerAutoConfig.smartui.defaultUrl;
+            }
+            
+            // 优先级5: 最后的备用地址
+            return 'https://lnakbfts.manus.space';
         }
 
         // 点击模态框外部关闭
