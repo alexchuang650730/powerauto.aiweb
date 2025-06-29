@@ -108,6 +108,148 @@
             box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
         }
 
+        /* 一键部署按钮特殊样式 */
+        .one-click-deploy {
+            background: linear-gradient(135deg, #10b981, #059669);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .one-click-deploy:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+        }
+
+        .one-click-deploy:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .one-click-deploy:hover:before {
+            left: 100%;
+        }
+
+        /* 部署模态框样式 */
+        .deploy-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .deploy-modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 1rem;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+            animation: modalSlideIn 0.3s ease-out;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .deploy-modal h2 {
+            color: #1f2937;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .deploy-steps {
+            margin: 1.5rem 0;
+        }
+
+        .deploy-step {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            margin: 0.5rem 0;
+            background: #f8fafc;
+            border-radius: 0.5rem;
+            border-left: 4px solid #e2e8f0;
+        }
+
+        .deploy-step.active {
+            background: #ecfdf5;
+            border-left-color: #10b981;
+        }
+
+        .deploy-step.completed {
+            background: #f0fdf4;
+            border-left-color: #22c55e;
+        }
+
+        .step-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 1rem;
+            color: #6b7280;
+        }
+
+        .deploy-step.active .step-icon {
+            color: #10b981;
+        }
+
+        .deploy-step.completed .step-icon {
+            color: #22c55e;
+        }
+
+        .deploy-progress {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .deploy-progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #10b981, #059669);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .deploy-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .close-btn {
+            background: #6b7280;
+            color: white;
+        }
+
+        .close-btn:hover {
+            background: #4b5563;
+        }
+
         .btn-secondary {
             background: white;
             color: #64748b;
@@ -576,8 +718,10 @@
                 </li>
             </ul>
             <div class="nav-actions">
-                <a href="#" class="btn btn-secondary" onclick="showLogin()">登錄</a>
-                <a href="#" class="btn btn-primary" onclick="showRegister()">註冊</a>
+                <a href="#" class="btn btn-primary one-click-deploy" onclick="startOneClickDeploy()">
+                    <i class="fas fa-rocket"></i>
+                    登錄一鍵部署
+                </a>
             </div>
         </div>
     </nav>
@@ -1115,13 +1259,197 @@
             alert('正在啟動產品演示...\n\n這是一個演示功能。在實際應用中，這裡會播放產品演示視頻或啟動交互式演示。');
         }
 
-        // 登录注册功能
-        function showLogin() {
-            alert('正在打開登錄頁面...\n\n這是一個演示功能。在實際應用中，這裡會顯示登錄表單。');
+        // 页面导航功能
+
+        // 一键部署功能 - 直接跳转到SmartUI MCP服务
+        function startOneClickDeploy() {
+            console.log('Starting one-click deployment - redirecting to SmartUI MCP...');
+            
+            // SmartUI MCP服务地址
+            const smartUIMCPUrl = 'https://smartui-mcp.manus.space/';
+            
+            try {
+                // 尝试在新标签页打开SmartUI MCP服务
+                const newWindow = window.open(smartUIMCPUrl, '_blank');
+                
+                if (newWindow) {
+                    console.log('Successfully opened SmartUI MCP service');
+                    // 显示成功提示
+                    showNotification('正在打開SmartUI MCP服務...', 'success');
+                } else {
+                    console.warn('Popup blocked - showing fallback options');
+                    // 弹窗被阻止时的处理
+                    showNotification('請允許彈出窗口以打開SmartUI MCP服務', 'warning');
+                    
+                    // 询问用户是否在当前页面打开
+                    if (confirm('彈出窗口被阻止。是否在當前頁面打開SmartUI MCP服務？')) {
+                        window.location.href = smartUIMCPUrl;
+                    }
+                }
+            } catch (error) {
+                console.error('Error opening SmartUI MCP service:', error);
+                showNotification('打開SmartUI MCP服務時出錯: ' + error.message, 'error');
+            }
         }
 
-        function showRegister() {
-            alert('正在打開註冊頁面...\n\n這是一個演示功能。在實際應用中，這裡會顯示註冊表單。');
+        function resetDeploySteps() {
+            const steps = document.querySelectorAll('.deploy-step');
+            steps.forEach(step => {
+                step.classList.remove('active', 'completed');
+            });
+            
+            document.getElementById('deployProgressBar').style.width = '0%';
+            document.getElementById('deployResult').style.display = 'none';
+            document.getElementById('openConsole').style.display = 'none';
+        }
+
+        function simulateDeployment() {
+            const steps = [
+                { id: 'step1', duration: 2000, message: '正在啟動 EC2 控制中心...' },
+                { id: 'step2', duration: 1500, message: '正在準備端側接收器...' },
+                { id: 'step3', duration: 2500, message: '正在建立連接...' },
+                { id: 'step4', duration: 3000, message: '正在部署 PowerAutomation_local...' },
+                { id: 'step5', duration: 1000, message: '部署完成！' }
+            ];
+
+            let currentStep = 0;
+            const totalSteps = steps.length;
+
+            function executeStep() {
+                if (currentStep < totalSteps) {
+                    const step = steps[currentStep];
+                    const stepElement = document.getElementById(step.id);
+                    
+                    if (stepElement) {
+                        // 激活当前步骤
+                        stepElement.classList.add('active');
+                        
+                        // 更新进度条
+                        const progress = ((currentStep + 1) / totalSteps) * 100;
+                        const progressBar = document.getElementById('deployProgressBar');
+                        if (progressBar) {
+                            progressBar.style.width = progress + '%';
+                        }
+                        
+                        setTimeout(() => {
+                            // 完成当前步骤
+                            stepElement.classList.remove('active');
+                            stepElement.classList.add('completed');
+                            
+                            currentStep++;
+                            
+                            if (currentStep < totalSteps) {
+                                executeStep();
+                            } else {
+                                // 所有步骤完成
+                                showDeploymentResult();
+                            }
+                        }, step.duration);
+                    } else {
+                        console.error('Step element not found:', step.id);
+                        currentStep++;
+                        if (currentStep < totalSteps) {
+                            executeStep();
+                        }
+                    }
+                }
+            }
+
+            // 立即开始执行第一步
+            executeStep();
+        }
+
+        function showDeploymentResult() {
+            // 模拟获取EC2 IP地址
+            const mockEC2IP = '52.74.123.45'; // 这里应该是实际的EC2 IP
+            
+            // 更新结果中的链接和命令
+            document.getElementById('webConsoleLink').href = `http://${mockEC2IP}:8090`;
+            document.getElementById('webConsoleLink').textContent = `http://${mockEC2IP}:8090`;
+            document.getElementById('clientCommand').textContent = `curl -O http://${mockEC2IP}:8090/connect_to_ec2.sh && ./connect_to_ec2.sh`;
+            
+            // 显示部署结果
+            document.getElementById('deployResult').style.display = 'block';
+            document.getElementById('openConsole').style.display = 'inline-flex';
+            
+            // 可选：自动打开控制台
+            setTimeout(() => {
+                if (confirm('部署完成！是否立即打開 SmartUI 工作台？')) {
+                    openWebConsole();
+                }
+            }, 1000);
+        }
+
+        function closeDeployModal() {
+            document.getElementById('deployModal').style.display = 'none';
+        }
+
+        function openWebConsole() {
+            console.log('openWebConsole function called');
+            // 跳转到指定的Manus服务
+            const smartUIUrl = 'https://lnakbfts.manus.space/';
+            console.log('Opening URL:', smartUIUrl);
+            try {
+                const newWindow = window.open(smartUIUrl, '_blank');
+                if (newWindow) {
+                    console.log('Window opened successfully');
+                } else {
+                    console.error('Failed to open window - popup blocked?');
+                    alert('请允许弹出窗口以打开SmartUI工作台');
+                }
+            } catch (error) {
+                console.error('Error opening window:', error);
+                alert('打开SmartUI工作台时出错: ' + error.message);
+            }
+        }
+
+        // 点击模态框外部关闭
+        window.onclick = function(event) {
+            const modal = document.getElementById('deployModal');
+            if (event.target === modal) {
+                closeDeployModal();
+            }
+        }
+
+        // 实际部署功能（连接到真实的EC2部署API）
+        async function realDeployment() {
+            try {
+                // 这里应该调用实际的部署API
+                const response = await fetch('/api/deploy', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        deployment_type: 'ec2_driven',
+                        user_preferences: {
+                            auto_start: true,
+                            enable_monitoring: true
+                        }
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    // 使用真实的部署结果更新UI
+                    updateDeploymentUI(result);
+                } else {
+                    throw new Error('部署失败');
+                }
+            } catch (error) {
+                console.error('部署错误:', error);
+                alert('部署失败，请稍后重试。');
+                closeDeployModal();
+            }
+        }
+
+        function updateDeploymentUI(deploymentResult) {
+            // 使用真实的部署结果更新UI
+            const { ec2_ip, console_url, client_command } = deploymentResult;
+            
+            document.getElementById('webConsoleLink').href = console_url;
+            document.getElementById('webConsoleLink').textContent = console_url;
+            document.getElementById('clientCommand').textContent = client_command;
         }
 
         // 页面加载时初始化
@@ -1141,7 +1469,151 @@
                 }
             });
         });
+
+        // 简单的通知函数
+        function showNotification(message, type = 'info') {
+            // 创建通知元素
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 500;
+                z-index: 9999;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                transition: all 0.3s ease;
+            `;
+            
+            // 根据类型设置颜色
+            switch(type) {
+                case 'success':
+                    notification.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    break;
+                case 'warning':
+                    notification.style.background = 'linear-gradient(135deg, #f59e0b, #d97706)';
+                    break;
+                case 'error':
+                    notification.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+                    break;
+                default:
+                    notification.style.background = 'linear-gradient(135deg, #2563eb, #1d4ed8)';
+            }
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // 3秒后自动移除
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 300);
+            }, 3000);
+        }
     </script>
+
+    <!-- 一键部署模态框 -->
+    <div id="deployModal" class="deploy-modal">
+        <div class="deploy-modal-content">
+            <h2>
+                <i class="fas fa-rocket"></i>
+                PowerAutomation 一鍵部署
+            </h2>
+            <p>正在為您部署 PowerAutomation 雲邊協同環境...</p>
+            
+            <div class="deploy-progress">
+                <div id="deployProgressBar" class="deploy-progress-bar"></div>
+            </div>
+            
+            <div class="deploy-steps">
+                <div id="step1" class="deploy-step">
+                    <i class="fas fa-server step-icon"></i>
+                    <div>
+                        <strong>啟動 EC2 控制中心</strong>
+                        <div>初始化雲端部署控制器...</div>
+                    </div>
+                </div>
+                <div id="step2" class="deploy-step">
+                    <i class="fas fa-download step-icon"></i>
+                    <div>
+                        <strong>準備端側接收器</strong>
+                        <div>生成端側連接腳本...</div>
+                    </div>
+                </div>
+                <div id="step3" class="deploy-step">
+                    <i class="fas fa-link step-icon"></i>
+                    <div>
+                        <strong>建立連接</strong>
+                        <div>等待端側設備連接...</div>
+                    </div>
+                </div>
+                <div id="step4" class="deploy-step">
+                    <i class="fas fa-cogs step-icon"></i>
+                    <div>
+                        <strong>部署服務</strong>
+                        <div>部署 PowerAutomation_local...</div>
+                    </div>
+                </div>
+                <div id="step5" class="deploy-step">
+                    <i class="fas fa-check-circle step-icon"></i>
+                    <div>
+                        <strong>部署完成</strong>
+                        <div>雲邊協同環境已就緒</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="deployResult" style="display: none;">
+                <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 0.5rem; padding: 1rem; margin: 1rem 0;">
+                    <h3 style="color: #166534; margin-bottom: 0.5rem;">
+                        <i class="fas fa-check-circle"></i>
+                        部署成功！
+                    </h3>
+                    <p style="color: #166534; margin-bottom: 1rem;">PowerAutomation 雲邊協同環境已成功部署</p>
+                    
+                    <div style="background: white; padding: 1rem; border-radius: 0.25rem; margin: 0.5rem 0;">
+                        <strong>🌐 Web 控制台:</strong>
+                        <a id="webConsoleLink" href="#" target="_blank" style="color: #2563eb; text-decoration: none;">
+                            http://your-ec2-ip:8090
+                        </a>
+                    </div>
+                    
+                    <div style="background: white; padding: 1rem; border-radius: 0.25rem; margin: 0.5rem 0;">
+                        <strong>📱 端側連接指令:</strong>
+                        <code id="clientCommand" style="background: #f3f4f6; padding: 0.25rem 0.5rem; border-radius: 0.25rem; font-family: monospace;">
+                            curl -O http://your-ec2-ip:8090/connect_to_ec2.sh && ./connect_to_ec2.sh
+                        </code>
+                    </div>
+                    
+                    <div style="background: white; padding: 1rem; border-radius: 0.25rem; margin: 0.5rem 0;">
+                        <strong>⚡ 服務狀態:</strong>
+                        <ul style="margin: 0.5rem 0; padding-left: 1.5rem;">
+                            <li>AICore 服務: <span style="color: #059669;">運行中</span></li>
+                            <li>HITL 服務: <span style="color: #059669;">運行中</span></li>
+                            <li>部署控制器: <span style="color: #059669;">運行中</span></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="deploy-actions">
+                <button id="closeDeployModal" class="btn close-btn" onclick="closeDeployModal()">
+                    關閉
+                </button>
+                <button id="openConsole" class="btn btn-primary" onclick="openWebConsole()" style="display: none;">
+                    <i class="fas fa-external-link-alt"></i>
+                    打開SmartUI工作台
+                </button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
 
